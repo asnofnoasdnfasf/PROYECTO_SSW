@@ -1,64 +1,408 @@
 
 <section class="contenedor">
-  <h1>Registrar cliente</h1>
-  <p>Completa los datos para registrar un nuevo cliente.</p>
+  <header class="encabezado">
+    <div>
+      <h1>Gestión de clientes</h1>
+      <p>Administra clientes y sus dispositivos desde un solo lugar.</p>
+    </div>
+    <span class="indicador">Sistema CRUD</span>
+  </header>
 
-  <form [formGroup]="formulario" (ngSubmit)="registrar()">
-    <label for="nombre">Nombre *</label>
-    <input id="nombre" type="text" formControlName="nomCliente" maxlength="45">
-    @if (formulario.controls.nomCliente.touched &&
-         formulario.controls.nomCliente.invalid) {
-      <small>El nombre es obligatorio.</small>
-    }
-
-    <label for="apellido">Apellido *</label>
-    <input id="apellido" type="text" formControlName="apeCliente" maxlength="45">
-    @if (formulario.controls.apeCliente.touched &&
-         formulario.controls.apeCliente.invalid) {
-      <small>El apellido es obligatorio.</small>
-    }
-
-    <label for="dni">DNI</label>
-    <input id="dni" type="text" formControlName="dni" maxlength="8" placeholder="8 dígitos">
-    @if (formulario.controls.dni.touched &&
-         formulario.controls.dni.invalid) {
-      <small>El DNI debe contener exactamente 8 dígitos.</small>
-    }
-
-    <label for="correo">Correo electrónico</label>
-    <input id="correo" type="email" formControlName="correo" maxlength="100">
-    @if (formulario.controls.correo.touched &&
-         formulario.controls.correo.invalid) {
-      <small>Ingresa un correo válido.</small>
-    }
-
-    <label for="telefono">Teléfono</label>
-    <input id="telefono" type="tel" formControlName="numTel" maxlength="9" placeholder="9 dígitos">
-    @if (formulario.controls.numTel.touched &&
-         formulario.controls.numTel.invalid) {
-      <small>El teléfono debe contener exactamente 9 dígitos.</small>
-    }
-
-    <label for="direccion">Dirección</label>
-    <input id="direccion" type="text" formControlName="direcc" maxlength="100">
-       <label for="MARCA">Marca</label>
-    <input id="MARCA" type="text" formControlName="MARCA" maxlength="100">
-       <label for="MODELO">Modelo</label>
-    <input id="MODELO" type="text" formControlName="MODELO" maxlength="100">
-       <label for="NUMERO_SERIE">Número de Serie</label>
-    <input id="NUMERO_SERIE" type="text" formControlName="NUMERO_SERIE" maxlength="100">
-       <label for="DESCRIPCION">Descripción</label>
-    <input id="DESCRIPCION" type="text" formControlName="DESCRIPCION" maxlength="100">
-
-    <button type="submit" [disabled]="guardando">
-      {{ guardando ? 'Registrando...' : 'Registrar cliente' }}
+  <!-- NAVEGACIÓN CRUD -->
+  <nav class="menu-crud">
+    <button type="button"
+            [class.activo]="vista === 'crear'"
+            (click)="vista = 'crear'">
+      + Registrar
     </button>
 
-    @if (mensaje) {
-      <p class="mensaje" [class.exito]="exito" role="status">
-        {{ mensaje }}
-      </p>
-    }
-  </form>
-  
+    <button type="button"
+            [class.activo]="vista === 'leer'"
+            (click)="verTabla()">
+      Ver tabla
+    </button>
+
+    <button type="button"
+            [class.activo]="vista === 'editar'"
+            (click)="vista = 'editar'">
+      Editar cliente
+    </button>
+
+    <button type="button"
+            [class.activo]="vista === 'eliminar'"
+            (click)="vista = 'eliminar'">
+      Eliminar cliente
+    </button>
+  </nav>
+
+  <!-- MENSAJE GENERAL -->
+  @if (mensaje) {
+    <div class="mensaje"
+         [class.exito]="exito"
+         role="status">
+      {{ mensaje }}
+    </div>
+  }
+
+  <!-- ================= CREATE ================= -->
+  @if (vista === 'crear') {
+    <section class="panel">
+      <div class="panel-titulo">
+        <h2>Registrar cliente</h2>
+        <p>Completa los datos personales y del dispositivo.</p>
+      </div>
+
+      <form [formGroup]="formulario" (ngSubmit)="registrar()">
+
+        <h3>Datos personales</h3>
+
+        <div class="form-grid">
+          <div class="campo">
+            <label for="nombre">Nombre *</label>
+            <input id="nombre" type="text"
+                   formControlName="nomCliente" maxlength="45">
+            @if (formulario.controls.nomCliente.touched &&
+                 formulario.controls.nomCliente.invalid) {
+              <small>El nombre es obligatorio.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="apellido">Apellido *</label>
+            <input id="apellido" type="text"
+                   formControlName="apeCliente" maxlength="45">
+            @if (formulario.controls.apeCliente.touched &&
+                 formulario.controls.apeCliente.invalid) {
+              <small>El apellido es obligatorio.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="dni">DNI</label>
+            <input id="dni" type="text" formControlName="dni"
+                   maxlength="8" placeholder="8 dígitos">
+            @if (formulario.controls.dni.touched &&
+                 formulario.controls.dni.invalid) {
+              <small>El DNI debe contener 8 dígitos.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="correo">Correo electrónico</label>
+            <input id="correo" type="email"
+                   formControlName="correo" maxlength="100">
+            @if (formulario.controls.correo.touched &&
+                 formulario.controls.correo.invalid) {
+              <small>Ingresa un correo válido.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" type="tel"
+                   formControlName="numTel" maxlength="9"
+                   placeholder="9 dígitos">
+            @if (formulario.controls.numTel.touched &&
+                 formulario.controls.numTel.invalid) {
+              <small>El teléfono debe contener 9 dígitos.</small>
+            }
+          </div>
+
+          <div class="campo">
+            <label for="direccion">Dirección</label>
+            <input id="direccion" type="text"
+                   formControlName="direcc" maxlength="100">
+          </div>
+        </div>
+
+        <h3>Datos del dispositivo</h3>
+
+        <div class="form-grid">
+          <div class="campo">
+            <label for="marca">Marca</label>
+            <input id="marca" type="text"
+                   formControlName="MARCA" maxlength="100">
+          </div>
+
+          <div class="campo">
+            <label for="modelo">Modelo</label>
+            <input id="modelo" type="text"
+                   formControlName="MODELO" maxlength="100">
+          </div>
+
+          <div class="campo">
+            <label for="serie">Número de serie</label>
+            <input id="serie" type="text"
+                   formControlName="NUMERO_SERIE" maxlength="100">
+          </div>
+
+          <div class="campo campo-completo">
+            <label for="descripcion">Descripción</label>
+            <input id="descripcion" type="text"
+                   formControlName="DESCRIPCION" maxlength="100">
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" [disabled]="guardando">
+            {{ guardando ? 'Registrando...' : 'Registrar cliente' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+
+  <!-- ================= READ ================= -->
+  @if (vista === 'leer') {
+    <section class="panel">
+      <div class="panel-titulo">
+        <h2>Clientes registrados</h2>
+        <p>Consulta los datos de clientes y dispositivos.</p>
+      </div>
+
+      <div class="tabla-cabecera">
+        <span>Total de registros: {{ clientes.length }}</span>
+
+        <button type="button" class="boton-secundario"
+                (click)="verTabla()">
+          Actualizar tabla
+        </button>
+      </div>
+
+      <div class="tabla-contenedor">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Cliente</th>
+              <th>DNI</th>
+              <th>Teléfono</th>
+              <th>Marca</th>
+              <th>Modelo</th>
+              <th>N.º serie</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (cliente of clientes; track cliente.idCliente) {
+              <tr>
+                <td>{{ cliente.idCliente }}</td>
+                <td>
+                  {{ cliente.nomCliente }} {{ cliente.apeCliente }}
+                </td>
+                <td>{{ cliente.dni || '—' }}</td>
+                <td>{{ cliente.numTel || '—' }}</td>
+                <td>{{ cliente.MARCA || '—' }}</td>
+                <td>{{ cliente.MODELO || '—' }}</td>
+                <td>{{ cliente.NUMERO_SERIE || '—' }}</td>
+                <td class="acciones-tabla">
+                  <button type="button" class="boton-editar"
+                          (click)="seleccionarParaEditar(cliente)">
+                    Editar
+                  </button>
+
+                  <button type="button" class="boton-eliminar"
+                          (click)="prepararEliminacion(cliente.idCliente)">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8" class="vacio">
+                  No hay clientes registrados.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  <!-- ================= UPDATE ================= -->
+  @if (vista === 'editar') {
+    <section class="panel">
+      <div class="panel-titulo">
+        <h2>Actualizar cliente</h2>
+        <p>Busca el registro por código para modificar sus datos.</p>
+      </div>
+
+      <div class="busqueda">
+        <div class="campo">
+          <label for="codigoBuscar">Código del cliente</label>
+          <input id="codigoBuscar" type="number"
+                 min="1" [(ngModel)]="buscarCodigo"
+                 [ngModelOptions]="{standalone: true}"
+                 placeholder="Ej. 15">
+        </div>
+
+        <button type="button" (click)="buscarParaEditar()">
+          Buscar cliente
+        </button>
+      </div>
+
+      @if (clienteEdicion) {
+        <form [formGroup]="formularioEdicion"
+              (ngSubmit)="actualizar()">
+
+          <div class="registro-encontrado">
+            Editando al cliente con código:
+            <strong>{{ clienteEdicion.idCliente }}</strong>
+          </div>
+
+          <h3>Datos personales</h3>
+
+          <div class="form-grid">
+            <div class="campo">
+              <label for="editNombre">Nombre</label>
+              <input id="editNombre" formControlName="nomCliente"
+                     maxlength="45">
+            </div>
+
+            <div class="campo">
+              <label for="editApellido">Apellido</label>
+              <input id="editApellido" formControlName="apeCliente"
+                     maxlength="45">
+            </div>
+
+            <div class="campo">
+              <label for="editDni">DNI</label>
+              <input id="editDni" formControlName="dni" maxlength="8">
+            </div>
+
+            <div class="campo">
+              <label for="editCorreo">Correo</label>
+              <input id="editCorreo" type="email"
+                     formControlName="correo" maxlength="100">
+            </div>
+
+            <div class="campo">
+              <label for="editTelefono">Teléfono</label>
+              <input id="editTelefono" formControlName="numTel"
+                     maxlength="9">
+            </div>
+
+            <div class="campo">
+              <label for="editDireccion">Dirección</label>
+              <input id="editDireccion" formControlName="direcc"
+                     maxlength="100">
+            </div>
+          </div>
+
+          <h3>Datos del dispositivo</h3>
+
+          <div class="form-grid">
+            <div class="campo">
+              <label for="editMarca">Marca</label>
+              <input id="editMarca" formControlName="MARCA"
+                     maxlength="100">
+            </div>
+
+            <div class="campo">
+              <label for="editModelo">Modelo</label>
+              <input id="editModelo" formControlName="MODELO"
+                     maxlength="100">
+            </div>
+
+            <div class="campo">
+              <label for="editSerie">Número de serie</label>
+              <input id="editSerie" formControlName="NUMERO_SERIE"
+                     maxlength="100">
+            </div>
+
+            <div class="campo campo-completo">
+              <label for="editDescripcion">Descripción</label>
+              <input id="editDescripcion" formControlName="DESCRIPCION"
+                     maxlength="100">
+            </div>
+          </div>
+
+          <div class="acciones">
+            <button type="submit"
+                    [disabled]="formularioEdicion.invalid || guardando">
+              {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+            </button>
+
+            <button type="button" class="boton-secundario"
+                    (click)="cancelarEdicion()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      } @else {
+        <p class="ayuda">
+          Ingresa el código y pulsa «Buscar cliente» para cargar sus datos.
+        </p>
+      }
+    </section>
+  }
+
+  <!-- ================= DELETE ================= -->
+  @if (vista === 'eliminar') {
+    <section class="panel panel-peligro">
+      <div class="panel-titulo">
+        <h2>Eliminar cliente</h2>
+        <p>Busca el registro por código antes de confirmar la eliminación.</p>
+      </div>
+
+      <div class="aviso">
+        Esta operación puede eliminar permanentemente los datos del cliente.
+        Comprueba el código antes de continuar.
+      </div>
+
+      <div class="busqueda">
+        <div class="campo">
+          <label for="codigoEliminar">Código del cliente</label>
+          <input id="codigoEliminar" type="number" min="1"
+                 [(ngModel)]="codigoEliminar"
+                 [ngModelOptions]="{standalone: true}"
+                 placeholder="Ej. 15">
+        </div>
+
+        <button type="button" class="boton-eliminar"
+                (click)="buscarParaEliminar()">
+          Buscar cliente
+        </button>
+      </div>
+
+      @if (clienteEliminar) {
+        <div class="detalle-eliminar">
+          <h3>Registro encontrado</h3>
+          <p>
+            <strong>Código:</strong>
+            {{ clienteEliminar.idCliente }}
+          </p>
+          <p>
+            <strong>Cliente:</strong>
+            {{ clienteEliminar.nomCliente }}
+            {{ clienteEliminar.apeCliente }}
+          </p>
+          <p>
+            <strong>Dispositivo:</strong>
+            {{ clienteEliminar.MARCA || 'Sin marca' }}
+            {{ clienteEliminar.MODELO || '' }}
+          </p>
+          <p>
+            <strong>Número de serie:</strong>
+            {{ clienteEliminar.NUMERO_SERIE || '—' }}
+          </p>
+
+          <div class="acciones">
+            <button type="button" class="boton-eliminar"
+                    [disabled]="guardando"
+                    (click)="eliminar()">
+              {{ guardando ? 'Eliminando...' : 'Confirmar eliminación' }}
+            </button>
+
+            <button type="button" class="boton-secundario"
+                    (click)="cancelarEliminacion()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  }
 </section>
