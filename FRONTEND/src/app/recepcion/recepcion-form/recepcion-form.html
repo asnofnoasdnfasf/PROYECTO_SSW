@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label for="tecnicoAsignado">TÉCNICO ASIGNADO</label>
+  <select id="tecnicoAsignado" class="form-control" required>
+    <option value="">— Seleccionar —</option>
+    <!-- Recorremos la lista que viene desde el componente -->
+    <option *ngFor="let tecnico of listaTecnicos" [value]="tecnico.idTecnico">
+      {{ tecnico.nomtec }}
+    </option>
+  </select>
+</div>

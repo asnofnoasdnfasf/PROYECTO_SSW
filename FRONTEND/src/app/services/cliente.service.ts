@@ -12,6 +12,10 @@ export interface Cliente {
   direcc?: string;
   numTel?: string;
   fecReg?: string;
+    MARCA?: string;
+    MODELO?: string;
+    NUMERO_SERIE?: string;
+    DESCRIPCION?: string;
 }
 
 @Injectable({
@@ -23,5 +27,21 @@ export class ClienteService {
 
   crearCliente(cliente: Cliente): Observable<Cliente> {
     return this.http.post<Cliente>(this.apiUrl, cliente);
+  }
+
+  listarClientes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(this.apiUrl);
+  }
+
+  buscarCliente(id: number): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
+  }
+
+  actualizarCliente(id: number, cliente: Cliente): Observable<Cliente> {
+    return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente);
+  }
+
+  eliminarCliente(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
